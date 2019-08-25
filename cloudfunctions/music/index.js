@@ -2,7 +2,8 @@
 const cloud = require('wx-server-sdk')
 const TcbRouter = require('tcb-router')
 cloud.init()
-
+const rp = require('request-promise')
+const BASE_URL = 'http://musicapi.xiecheng.live'
 const db = cloud.database({
   env: 'small-5azp9'
 })
@@ -21,5 +22,13 @@ ctx.body = await db.collection('playlist')
   return res
 })
 })
+
+app.router('musiclist', async(ctx, next) => {
+ctx.body= await rp(BASE_URL+'/playlist/detail?id= '+ parseInt(event.playlistId))
+.then((res)=> {
+  return JSON.parse(res)
+})
+})
+
 return app.serve()
 }
