@@ -1,0 +1,5 @@
+<view class="" hover-class="none" hover-stop-propagation="false">
+  <button bind:tap="getMusic">获取音乐信息</button>
+  
+  <button bind:tap="getMovie">获取电影信息</button>
+</view>

@@ -1,5 +1,7 @@
 {
   "usingComponents": {
     "x-list":"/components/playlist/playlist"
-  }
+   
+  },
+  "enablePullDownRefresh":  true
 }

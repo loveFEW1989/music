@@ -158,6 +158,112 @@ exports.main = async(event, context) => {
 }
 
 ```
+# 首页开发 从云数据库中取 歌单数据
+```
+1，新建云函数 music 
+
+2, playlist页面中 在onLoad钩子函数中调用云函数 获取云数据库中的数据
+
+3, onLoad() 取15条数据  ，滚动触底时继续取剩下的数据， 
+this.setData({playList:this.data.playList.concat(res.result.data)})
+
+4,下拉刷新 
+
+json中设置 允许下拉刷新
+"enablePullDownRefresh":  true
+先把数组清空 在重新请求数据
+
+下拉刷新 已经重新获取到数据了 但是 是哪个小点还是存在???
+
+wx.stopPullDownRefresh() 停止下拉刷新这个动作
+
+5 加锁 解锁    8月25 未解决
+所有数据都获取到以后 触底时会继续向服务器发送请求，这个问题怎么解决
+
+
+```
+# 首页开发  点击歌单图片 跳转到歌单详情页面
+
+```
+1,wx.navigationTo() 把歌单id 当参数传入   在详情页通过 options获取到
+传过来的id ，然后通过id从云数据库中获取到 当条歌单的详细信息
+
+2，获取该条歌单详细信息云函数  music   -- 通过tcb-router分配路由
+
+pages/musiclist/musiclist.js  :
+
+onLoad: function (options) {
+  wx.showLoading({title:'数据加载中...'})
+  wx.cloud.callFunction({
+    name: 'music',
+    data: {
+      playlistId: options.playlistId,
+      $url: 'musiclist'
+    }
+  }).then((res)=> {
+    const pl = res.result.playlist
+    this.setData({
+      musiclist: pl.tracks,
+      listInfo: {
+        coverImgUrl: pl.coverImgUrl,
+        name: pl.name
+      }
+    })
+
+  })
+}
+
+
+云函数  'music' :
+
+const cloud = require('wx-server-sdk')
+
+const TcbRouter = require('tcb-router')
+
+const rp = require('request-promise')
+
+const BASE_URL = 'http://musicapi.xiecheng.live'
+
+cloud.init()
+
+const db = cloud.database()
+
+<!-- 云函数入口 -->
+
+exports.main = async (event, context) => {
+  const app = new TcbRouter({event})
+
+  app.router('playlist', async(ctx,next) => {
+    ctx.body = await db.collection('playlist)
+    .skip(event.start)
+    .limit(event.count)
+    .orderBy('createTime','desc')
+    .get()
+    .then((res) => {
+      return res
+    })
+  })
+
+
+  app.router('musiclist', async (ctx,next) => {
+    ctx.body = await rp(BASE_URL+ '/playlist/detail?id='+ parseInt(event.playlistId))
+    .then((res) => {
+      return JSON.parse(res)
+    })
+  })
+  
+
+  return app.serve()
+}
+
+
+
+
+
+
+
+```
+
 
 
 # 云开发 quickstart
