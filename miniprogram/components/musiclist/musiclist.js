@@ -21,12 +21,12 @@ musiclist: Array
   selectMusic(e) {
     console.log(e.currentTarget.dataset.musicid)
     const ds = e.currentTarget.dataset
-    const musicid = ds.musicid
+    const musicId = ds.musicid
     this.setData({
-      playingId: musicid
+      playingId: musicId
     })
     wx.navigateTo({
-      url: `/pages/player/player?musicid=${musicid}&index=${ds.idx}`
+      url: `/pages/player/player?musicId=${musicId}&index=${ds.idx}`
       
     })
   }

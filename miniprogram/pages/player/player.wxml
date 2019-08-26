@@ -3,9 +3,16 @@
 
 <view class="player-info">
 <!-- 封面信息 -->
-<view class="player-disc">
- <image class="player-img" src="{{picUrl}}"/>
+<view class="player-disc {{isplaying ? 'play' : ''}}">
+ <image class="player-img rotation {{isplaying ? '' : 'rotation-paused'}}" src="{{picUrl}}"/>
    
 </view>
 
+</view>
+
+<!-- 控制面板 -->
+<view class="control">
+  <text class="prev iconfont iconshangyishou" bind:tap ="prevChange"></text>
+  <text class="play iconfont {{isplaying ? 'iconzanting' :'iconbofang'}}" bind:tap="togglePlaying" > </text>
+  <text class="next iconfont iconxiayigexiayishou" bind:tap="nextChange"></text>
 </view>

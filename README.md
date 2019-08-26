@@ -271,7 +271,188 @@ exports.main = async (event, context) => {
 
 2，从歌单详情页 跳转到 歌曲详情页  我们要把cid 也就是点击的是歌单中的哪首歌曲 传过去
 
+
 3， 通过cid从缓存中取出歌曲数据
+
+
+
+4，引入iconfont  制作控制面板
+
+<!-- 控制面板 -->
+<view class="control">
+  <text class="prev iconfont iconshangyishou"></text>
+  <text class="play iconfont iconbofang" > </text>
+  <text class="next iconfont iconxiayigexiayishou"></text>
+</view>
+
+5,实现控制面板的功能
+
+"requiredBackgroundModes": ["audio"], 允许后台播放音乐
+// 获取全局唯一的背景音频管理器
+const backgroundAM = wx.getBackgroundAudioManager()
+
+<!-- 设置播放音乐控制面板信息 -->
+<!-- 播放链接 -->
+backgroundAM.src= result.data[0].url
+<!-- title -->
+backgroundAM.title=music.name,
+<!-- 封面图片 -->
+backgroundAM.coverImgUrl = music.al.picUrl
+<!-- 歌手名 -->
+backgroundAM.singer = music.ar[0].name
+<!-- 专辑名 -->
+backgroundAM.epname = music.al.name
+
+
+player.js : 
+
+以下是player.js中的代码
+
+<!-- 存储的是歌曲信息列表 -->
+let musiclist = [ ]
+
+当前正在播放的歌曲id 默认为0
+let playingIndex = 0
+
+获取全局唯一的背景音频管理器
+const backgroundAM = wx.getBackgroundAudioManager()
+
+data: {
+  picUrl: '' //歌曲播放地址
+  isplaying: false  //是否正在播放歌曲
+
+}
+onLoad: function(options) {
+  获取当前歌曲是歌单中的哪一首
+  playingIndex = options.index
+  从缓存中获取当前歌曲,歌手,专辑等相关信息（不包括播放地址等信息）
+  musiclist = wx.getStogrageSyc('musiclist)
+  通过从options中获取到的musicId 向服务器请求数据
+  this._loadMusicDetail(options.musicId)
+
+
+},
+
+_loadMusicDetail(musicId) {
+  当前点击的具体是歌单中的哪一首
+  let music = musiclist[playingIndex]
+  设置播放页标题栏文字
+  wx.setNavigationBarTitle({
+    title:music.name
+  })
+  获取播放背景图片
+  this.setData({
+    picUrl:music.al.picUrl
+  })
+
+通过云函数获取当前歌曲播放链接
+wx.cloud.callFunction({
+    name:'music',
+    data: {
+      $url:'musicUrl',
+      musicId
+
+    }
+  }).then((res) => {
+  
+    let result = JSON.parse(res.result)
+    播放链接
+    backgroundAM.src= result.data[0].url
+    标题
+    backgroundAM.title=music.name,
+    封面图
+    backgroundAM.coverImgUrl = music.al.picUrl
+    歌手名
+    backgroundAM.singer = music.ar[0].name
+    封面名称
+    backgroundAM.epname = music.al.name
+
+    wx.hideLoading()
+    将状态设置成正在播放
+    this.setData({
+      isplaying: true
+    })
+  })
+
+}
+
+中间播放暂停按钮点击事件
+togglePlaying() {
+  if(this.data.isplaying) {
+    backgroundAM.pause()
+  }else {
+    backgroundAM.play()
+  }
+  this.setData({
+    isplaying: !this.data.isplaying
+  })
+}
+
+
+上一首按钮点击事件
+prevChange() {
+  playingIndex--
+  如果当前已经是第一首 就跳转到最后一首 获取最后一首的url
+  if(playinfIndex < 0) {
+    playingIndex = musiclist.length-1
+  }
+  this._loadMusicDetail(musiclist[palyingIndex].id)
+}
+
+
+下一首按钮点击事件
+nextChange() {
+  playingIndex++
+  如果当前是最后一首就跳转到第一首 获取第一首的Url
+  if(playingIndex === musiclist.length) {
+    playingIndex = 0
+  }
+  this._loadMusicDetail(musiclist[playingIndex].id)
+}
+
+
+ps: 播放页面中间的图片以及唱片指针都由状态isplaying来控制
+播放状态，isplaying为true 中间唱片图片旋转 唱片指针移动到唱片上
+暂停状态，isplaying为false 中间唱片停止旋转 唱片指针移开
+
+<view class="player-disc {{isPlaying?'play': ''}}" >
+    <image class="player-img rotation {{isPlaying?'':'rotation-paused'}}" src="{{picUrl}}"></image>
+</view>
+isplaying控制两个class属性  'play' ->唱片指针移开移入切换
+'rotation-paused'   控制图片旋转
+.player-disc::after {
+  content: '';
+  width: 192rpx;
+  height: 274rpx;
+  position: absolute;
+  top: -150rpx;
+  left: 266rpx;
+  background: url('https://s3.music.126.net/m/s/img/needle.png?702cf6d95f29e2e594f53a3caab50e12') no-repeat center/contain;
+  transform: rotate(-15deg);
+  transform-origin: 24rpx 10rpx;
+  transition: transform 0.5s ease;
+}
+
+.play.player-disc::after {
+  transform: rotate(0deg);
+}
+
+
+
+.rotation {
+  animation: rotation 12s linear infinite;
+  -moz-animation: rotation 12s linear infinite;
+  -webkit-animation: rotation 12s linear infinite;
+  -o-animation: rotation 12s linear infinite;
+}
+
+.rotation-paused {
+  animation-play-state: paused;
+}
+
+
+
+
 
 
 
