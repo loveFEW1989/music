@@ -13,10 +13,8 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-console.log(options)
-wx.showLoading({
-  title:'数据加载中...'
-})
+
+    wx.showLoading({title:"数据加载中"})
 wx.cloud.callFunction({
   name:'music',
   data: {
@@ -24,6 +22,7 @@ wx.cloud.callFunction({
     $url:'musiclist'
   }
 }).then((res)=> {
+  
   console.log(res)
   const pl = res.result.playlist
   this.setData({
@@ -33,8 +32,15 @@ wx.cloud.callFunction({
       name: pl.name
     }
   })
+  this._setMusiclist()
+  wx.hideLoading()
 })
-wx.hideLoading()
+
+
+  },
+
+  _setMusiclist() {
+    wx.setStorageSync('musiclist', this.data.musiclist)
   },
 
   /**
