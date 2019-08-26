@@ -318,7 +318,7 @@ let playingIndex = 0
 const backgroundAM = wx.getBackgroundAudioManager()
 
 data: {
-  picUrl: '' //歌曲播放地址
+  picUrl: '' //播放背景图片地址
   isplaying: false  //是否正在播放歌曲
 
 }
@@ -334,7 +334,7 @@ onLoad: function(options) {
 },
 
 _loadMusicDetail(musicId) {
-  当前点击的具体是歌单中的哪一首
+  当前正在播放的歌曲信息
   let music = musiclist[playingIndex]
   设置播放页标题栏文字
   wx.setNavigationBarTitle({
