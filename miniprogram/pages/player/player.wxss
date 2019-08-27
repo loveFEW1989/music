@@ -118,3 +118,13 @@
 .control  .next, .control .prev {
   font-size: 80rpx
 }
+
+/* 进度条 */
+
+.progress-bar{
+  width:90%;
+  position: absolute;
+  left:50%;
+  transform: translateX(-50%);
+  bottom:24%
+}

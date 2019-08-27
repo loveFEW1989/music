@@ -1,5 +1,11 @@
 # 小程序云开发 -- 仿网易云音乐
 
+# 需要解决的问题
+
+获取的歌曲url存入缓存？
+
+
+
 observers 数据监听器
 ['playlist.playCount'] 监听对象的属性，
 最后赋值的时候 赋值给data 中的值，而不是原值，不然会造成死循环
@@ -458,8 +464,15 @@ isplaying控制两个class属性  'play' ->唱片指针移开移入切换
 
 
 ```
-
-
+#进度条组件progress-bar
+数据：
+showTime :{ currentTime当前播放时间  totalTime歌曲总时间}
+可移动区域
+<movable-area>
+<movable-view></movable-view>
+</movable-area> 
+进度控制
+<progress></progress>
 # 云开发 quickstart
 
 这是云开发的快速启动指引，其中演示了如何上手使用云开发的三大基础能力：

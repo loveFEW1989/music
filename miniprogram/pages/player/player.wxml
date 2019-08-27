@@ -8,6 +8,9 @@
    
 </view>
 
+<!-- 进度条 -->
+<view class="progress-bar">
+<x-progressBar />
 </view>
 
 <!-- 控制面板 -->
@@ -16,3 +19,6 @@
   <text class="play iconfont {{isplaying ? 'iconzanting' :'iconbofang'}}" bind:tap="togglePlaying" > </text>
   <text class="next iconfont iconxiayigexiayishou" bind:tap="nextChange"></text>
 </view>
+
+</view>
+
