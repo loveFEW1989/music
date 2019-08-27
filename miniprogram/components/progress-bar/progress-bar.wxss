@@ -14,7 +14,7 @@
   position:absolute;
   bottom:-14rpx;
   left:0;
-  top:-8rpx;
+  
 }
 .movable-view{
   width:36rpx;

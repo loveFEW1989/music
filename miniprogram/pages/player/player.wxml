@@ -10,7 +10,7 @@
 
 <!-- 进度条 -->
 <view class="progress-bar">
-<x-progressBar />
+<x-progressBar bind:end="nextChange" />
 </view>
 
 <!-- 控制面板 -->

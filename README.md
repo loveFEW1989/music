@@ -4,6 +4,7 @@
 
 1,获取的歌曲url存入缓存？
 2，首页获取的歌单数据能不能缓存
+3,在播放器中选择了音乐 退回到歌单界面时 当前选择的音乐名字应该高亮
 
 
 observers 数据监听器
@@ -577,6 +578,92 @@ methods: {
 
 
 ```
+# 进度条 与 播放进度联动
+let currentSec = -1 // 当前的秒数
+```
+backgroundAudioManager.onTimeUpdate(()=> {
+<!-- 当前播放时间 -->
+const currentTime = backgroundAudioManager.currenttime
+<!-- 总时间 -->
+const duration = backgroundAudioManager.duration
+当前播放时间  返回 ？秒
+const sec = currentTime.toString().split('.')[0]
+
+if(sec !== currentSec) {
+  当前播放时间转换为  =>  ？分 ? 秒 的形式
+  const currentTimeFmt = this._dateFormat(currentTime)
+  this.setData({
+    <!-- 圆球的x轴移动距离 -->
+    movableDies: (movableAreaWidth - movableViewWidth) * currentTime / dduration,
+    <!-- 进度条已播放进度 -->
+    progress: currentTime/duration *100,
+    <!-- 设置播放时间的格式 -->
+    ['showTime.currentTime']:`${currentTimeFmt.min}:${currentTimeFrm.sec}`
+  })
+  currentSec = sec
+
+}
+
+
+})
+
+```
+# 实现进度条拖拽
+ps: 在change阶段不要通过setData改变值 只在拖动结束时改变
+event.detail.source = 'touch'时表示是在拖动 
+‘’ 空字符串表示播放引起的改变
+onChange事件与 backgroundAudioManager.onTimeUpdate()有冲突
+导致拖拽时会闪动 所以添加一个状态 isMoving  true代表正在拖拽 false
+代表没有拖拽   只有为false时，才执行onTimeUpdate()中的代码
+并且 backgroundAudioManager.onplay() 音乐在播放时 isMoving设为false
+
+<!-- 进度条改变事件 -->
+onChange(event) {
+if(event.detail.source === 'touch') {
+  this.data.progress = event.detail.x / (movableAreaWidth- movableViewWidth) * 100
+  this.data.movableDis = event.detail.x
+  isMoving= true
+}
+
+}
+<!-- 拖动结束事件 -->
+onTouchEnd() {
+ const currentTimeFmt = this._dateFormat(Math.floor(backgroundAudioManager.currentTime))
+
+ this.setData({
+   progress: this.data.progress,
+   movableDis:this.data.movableDis,
+   ['showTime.currentTime']: currentTimeFmt.min + ':'+ currentTimeFmt.sec
+ })
+ isMoving = false
+
+
+
+}
+
+backgroundAudioManager.onplay(() => {
+  ismoving = false
+})
+
+backgroundAudioManager.onTimeUpdate(()=> {
+  if(!isMoving) {
+    .......
+  }
+})
+
+# 一曲播放完  自动播放下一首
+```
+<x-progressBar bind:end="nextChange" />
+我们调用父组件的nextChange() 就可以自动播放下一首
+
+播放完成的监听函数是backgroundAudioManager.onEnded(()=> {
+this.triggerEvent('end')
+})
+
+```
+
+
+
 
 # 云开发 quickstart
 
