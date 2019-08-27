@@ -609,14 +609,16 @@ if(sec !== currentSec) {
 
 ```
 # 实现进度条拖拽
-ps: 在change阶段不要通过setData改变值 只在拖动结束时改变
-event.detail.source = 'touch'时表示是在拖动 
+
+
+- ps: 在change阶段不要通过setData改变值 只在拖动结束时改变
+- event.detail.source = 'touch'时表示是在拖动 
 ‘’ 空字符串表示播放引起的改变
-onChange事件与 backgroundAudioManager.onTimeUpdate()有冲突
+- onChange事件与 backgroundAudioManager.onTimeUpdate()有冲突
 导致拖拽时会闪动 所以添加一个状态 isMoving  true代表正在拖拽 false
 代表没有拖拽   只有为false时，才执行onTimeUpdate()中的代码
-并且 backgroundAudioManager.onplay() 音乐在播放时 isMoving设为false
-
+- 并且 backgroundAudioManager.onplay() 音乐在播放时 isMoving设为false
+```
 <!-- 进度条改变事件 -->
 onChange(event) {
 if(event.detail.source === 'touch') {
@@ -650,7 +652,7 @@ backgroundAudioManager.onTimeUpdate(()=> {
     .......
   }
 })
-
+```
 # 一曲播放完  自动播放下一首
 ```
 <x-progressBar bind:end="nextChange" />
