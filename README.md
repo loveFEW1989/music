@@ -2,8 +2,8 @@
 
 # 需要解决的问题
 
-获取的歌曲url存入缓存？
-
+1,获取的歌曲url存入缓存？
+2，首页获取的歌单数据能不能缓存
 
 
 observers 数据监听器
@@ -473,6 +473,111 @@ showTime :{ currentTime当前播放时间  totalTime歌曲总时间}
 </movable-area> 
 进度控制
 <progress></progress>
+
+
+小程序自定义组件生命周期 =>
+```
+lifetimes: {
+    attached: function() {
+      // 在组件实例进入页面节点树时执行
+    },
+    detached: function() {
+      // 在组件实例被从页面节点树移除时执行
+    },
+  },
+  // 以下是旧式的定义方式，可以保持对 <2.2.3 版本基础库的兼容
+  attached: function() {
+    // 在组件实例进入页面节点树时执行
+  },
+  detached: function() {
+    // 在组件实例被从页面节点树移除时执行
+  },
+  // 
+```
+
+**************************************
+```
+progress-bar.js  =>
+
+1,获取进度条可移动区域的实际宽度 
+默认进度条宽度
+let movableAreaWidth = 0
+默认圆圈宽度
+let movableViewWidth = 0
+
+背景音乐播放器
+const backgroundAudioManager = wx.getBackgroundAudioManager()
+
+data:{
+  showTime:{
+   currentTime:'00:00', // 歌曲播放时间
+   totalTime: '00:00' // 歌曲总时间
+
+  },
+  movableDis: 0,  //x轴偏移距离
+}
+lifetimes: {
+  ready() {
+     获取进度条宽度和中间圆的宽度
+     this._getMovableDis()
+     监听背景音乐播放
+    this._bindBGMEvent()
+  }
+},
+methods: {
+   //  获取进度条宽度和中间圆的宽度
+  _getMovableDis() {
+    const query = wx.createSelectorQuery()
+    query.select('.movable-area').boundingClientRect()
+    query.select('.movable-view').boundingClientRect()
+    query.exec((rect) => {
+      movableAreaWidth = rect[0].width
+      movableViewWidth = rect[1].width
+    })
+  },
+  _bindBGMEvent() {
+    backgroundAudioManager.onCanplay(() => {
+      <!-- backgroundAudioManager.duration可以获取到音乐播放时间
+      但是因为程序的bug 有时候获取的是undefined 所以如果得到的值不是Undefined
+      就把获取到的时间赋值给totalTime  反之则延迟1s 继续通过
+      backgroundAudioManager.duration获取到音乐播放时间，再赋值给totalTime -->
+      if(typeof backgroundAudioManager.duration !== 'undefined') {
+        this._setTime()
+      } else {
+        setTimeOut(()=> {
+        this._setTime()  
+        },1000)
+      }
+    })
+  },
+  设置真实的歌曲播放总时间
+  _setTime() {
+    duration = backgroundAudioManager.duration
+    coant durationFram = this._dateFram(duration)
+    this.setData({
+      ['showTime.totalTime']: `${durationFram(min)}:${durationFram(sec)}`
+    })
+  },
+  <!-- 格式化时间   把获取到的毫秒 => ? 分 ？秒的形式   -->
+  _dateFram(time){
+    const min = Math.floor(time/60)
+    const sec = Math.floor(time%60) 
+    return {
+      'min': this._parse0(min),
+      'sec': this._parse0(sec)
+    }
+  },
+  <!-- 补零 -->
+  _parse0(time){
+    return time < 10 ? '0'+time : time
+  }
+}
+
+
+
+
+```
+
 # 云开发 quickstart
 
 这是云开发的快速启动指引，其中演示了如何上手使用云开发的三大基础能力：
