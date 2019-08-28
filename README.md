@@ -664,6 +664,57 @@ this.triggerEvent('end')
 
 ```
 
+# 歌词组件 
+
+## 知识点：
+- wx:if 与 hidden 的区别 : wx;if 条件为真时渲染 为假时不渲染，
+  而hidden始终会渲染，只是简单控制显示与隐藏 ，一般来说 wx:if 有更高的切换
+  消耗，而hidden有更高的初始消耗，因此需要频繁切换显示隐藏，使用hidden 
+- observers数据监听器可以用于监听和响应任何属性和数据字段的变化
+
+## 获取歌词数据
+``` 
+
+
+
+
+```
+## 歌词数据解析
+
+```
+
+```
+
+## 歌词与播放数据联动
+- 知识点：
+- triggerEvent('事件名',‘携带参数’) 向外派发自定义事件
+- selectComponent()  通过id 或者 className 获取 组件对象
+- 组件 向组件传值 
+控制组件progress-bar 派发自定义事件timeUpdate，携带参数currentTime 当前正在播放的事件， 传递给父组件 Player  父组件接收到timeUpdate事件，执行自己的timeUpdate事件，
+并在该事件中 通过调用selectComponent(className ) 调用歌词组件lyric的update方法
+
+把currentTime传过去 
+
+
+
+## 解决歌曲播放时间 比 歌词时间长的问题
+
+
+
+
+# 细节调整
+
+- 组件间传值  可以使用全局属性
+
+## 高亮正在播放的歌曲
+
+
+## 控制面板组件 与 内置控制面板的联动
+
+
+## 点击上一首 下一首后 当前播放歌曲不高亮
+
+## 正在播放歌曲  点击退出 再进来 会重新播放
 
 
 

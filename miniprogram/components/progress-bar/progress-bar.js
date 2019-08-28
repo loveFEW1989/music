@@ -12,7 +12,7 @@ Component({
    * 组件的属性列表
    */
   properties: {
-
+   isSame:Boolean
   },
 
   /**
@@ -31,6 +31,9 @@ Component({
    ready() {
     this._getMovableDis()
     this._bindBGMEvent()
+    if(this.properties.isSame && this.data.showTime.totalTime=='00:00') {
+      this._setTime()
+    }
    }
  },
 
@@ -66,7 +69,7 @@ Component({
     query.select('.movable-view').boundingClientRect()
 
     query.exec((rect) => {
-      console.log(rect)
+      
       movableAreaWidth = rect[0].width
       movableViewWidth = rect[1].width
     })
@@ -78,6 +81,7 @@ Component({
     backgroundAudioManager.onPlay(() => {
       console.log('onPlay')
       isMoving = false
+      this.triggerEvent('musicPlay')
     })
     // 监听背景音乐停止事件
     backgroundAudioManager.onStop(() => {
@@ -86,6 +90,7 @@ Component({
     // 监听背景音乐暂停事件
     backgroundAudioManager.onPause(() => {
       console.log('Pause')
+      this.triggerEvent('musicPause')
       
     })
   //  当音频因为数据不够，需要停下来加载
@@ -125,6 +130,9 @@ Component({
 
 
     }
+    this.triggerEvent('Update',{
+      currentTime
+    })
      }
     })
   // 监听背景音乐自然播放结束
@@ -144,7 +152,7 @@ Component({
   _setTime() {
      duration = backgroundAudioManager.duration
     const durationFmt = this._dateFormat(duration)
-    console.log(durationFmt)
+    
     this.setData({
       ['showTime.totalTime']: `${durationFmt.min}:${durationFmt.sec}`
     })

@@ -128,3 +128,5 @@
   transform: translateX(-50%);
   bottom:24%
 }
+
+/* 歌词 */

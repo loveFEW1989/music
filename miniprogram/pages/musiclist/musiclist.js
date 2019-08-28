@@ -1,4 +1,5 @@
 // pages/musiclist/musiclist.js
+
 Page({
 
   /**
@@ -8,7 +9,7 @@ Page({
     musiclist: [],
     listInfo: {}
   },
-
+ 
   /**
    * 生命周期函数--监听页面加载
    */
@@ -23,7 +24,7 @@ wx.cloud.callFunction({
   }
 }).then((res)=> {
   
-  console.log(res)
+  
   const pl = res.result.playlist
   this.setData({
     musiclist: pl.tracks,
