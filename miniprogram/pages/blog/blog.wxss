@@ -1,1 +1,31 @@
-/* miniprogram/pages/blog/blog.wxss */
+page{
+  background-color: #999;
+}
+
+.header{
+  display: flex;
+  align-items: center;
+  padding: 0 20rpx;
+  background-color: #fff;
+  height:100rpx;
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100%;
+  z-index:99;
+  box-sizing:border-box
+}
+.header .iconfabu {
+  font-size: 48rpx;
+
+}
+.publish-container{
+  width: 69rpx;
+  height: 69rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-container{
+  flex:1;
+}

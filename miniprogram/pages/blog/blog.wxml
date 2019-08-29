@@ -1,2 +1,18 @@
-<!--miniprogram/pages/blog/blog.wxml-->
-<text>miniprogram/pages/blog/blog.wxml</text>
+<view class="container">
+ <!-- 头部 -->
+<view class="header">
+
+<view class="publish-container">
+<i class="iconfont iconfabu"></i>
+</view>
+
+<view class="search-container">
+
+<x-search iconfont="iconfont" iconsousuo="iconsousuo" ></x-search>
+</view>
+
+
+</view>
+
+
+</view>
