@@ -1,6 +1,4 @@
-page{
-  background-color: #999;
-}
+
 
 .header{
   display: flex;

@@ -2,7 +2,7 @@
  <!-- 头部 -->
 <view class="header">
 
-<view class="publish-container">
+<view class="publish-container" bind:tap="onPublish">
 <i class="iconfont iconfabu"></i>
 </view>
 
@@ -11,8 +11,11 @@
 <x-search iconfont="iconfont" iconsousuo="iconsousuo" ></x-search>
 </view>
 
-
 </view>
 
 
+
+
+<!-- 底部弹出层 -->
+<x-login bind:loginsuccess="onLoginSuccess" bind:loginfail="onLoginFail"  showModal="{{showModal}}"></x-login>
 </view>

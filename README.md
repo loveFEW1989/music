@@ -5,6 +5,7 @@
 1,获取的歌曲url存入缓存？
 2，首页获取的歌单数据能不能缓存
 3,在播放器中选择了音乐 退回到歌单界面时 当前选择的音乐名字应该高亮
+4，vip点击的时候就提示不能播放
 
 
 observers 数据监听器
@@ -717,6 +718,76 @@ this.triggerEvent('end')
 ## 正在播放歌曲  点击退出 再进来 会重新播放
 
 
+
+
+# blog 发现页面的开发  
+
+## 头部区域  发布按钮 搜索框  搜索按钮
+
+```
+发布按钮引入iconfont实现  搜索框和搜索按钮合并成组件
+
+组件接收父组件的class样式 
+ <view class="search-container">
+      <x-search iconfont="iconfont" icon-sousuo="icon-sousuo" bind:search="onSearch" />
+    </view>
+
+externalClasses接收样式数组
+
+ externalClasses: [
+    'iconfont',
+    'icon-sousuo',
+  ],
+
+
+```
+## 底部弹出层组件
+
+- 组件中设置 styleIsolation: 'apply-shared' 可以去除样式隔离 可以使用外部样式
+‘isolated’:样式隔离
+‘apply-shared’页面样式可以影响自定义组件 反过来则不行
+‘shared’页面样式 自定义组件样式 会互相影响
+
+- 启用多个插槽
+options: {
+  
+    multipleSlots: true
+   },
+
+- 具名插槽
+ <slot name="slot1"></slot>
+
+ <view slot="slot1"></view>
+
+## login组件 以及登录逻辑
+
+
+## 发布页
+
+
+
+布局： 上方text-area 中间图片列表(添加图片图标) 下方是 发布按钮
+text-area 获取焦点 键盘弹出 下方要弹到上面去 反之则出现在下面
+下方是同过fiexed bottom固定的  
+内联样式  把bottom绑定到 {{heights}}上
+获取焦点 失去焦点   改变 heights的值  
+已输入###最多只能输入###
+
+
+## 图片选择
+
+- 图片添加到循环列表里 需要使用 concat 否则多次添加图片每次都会覆盖前一次的内容
+
+- 总数量  已选择数量   数量满了后+号要消失
+
+- 通过索引删除元素
+
+- 删除图片后总数不满9张 +号需要显示回来
+
+- 通过索引确定当前正在预览的是哪张图片
+
+
+ 
 
 # 云开发 quickstart
 
