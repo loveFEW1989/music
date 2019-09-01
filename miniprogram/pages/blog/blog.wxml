@@ -1,21 +1,26 @@
 <view class="container">
- <!-- 头部 -->
-<view class="header">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="publish-container" bind:tap="onPublish">
+      <i class="iconfont iconfabu"></i>
+    </view>
+    <view class="search-container">
+      <x-search iconfont="iconfont" iconsousuo="iconsousuo"></x-search>
+    </view>
+  </view>
+  
+  <!-- 卡片列表 -->
 
-<view class="publish-container" bind:tap="onPublish">
-<i class="iconfont iconfabu"></i>
-</view>
-
-<view class="search-container">
-
-<x-search iconfont="iconfont" iconsousuo="iconsousuo" ></x-search>
-</view>
-
-</view>
+  <view class="blog-list">
+    <block wx:for="{{blogList}}" wx:key="*this">
+       <view class="blog-panel">
+         <x-blog-card blog="{{item}}"></x-blog-card>
+       </view>
+    </block>
+      
 
 
-
-
-<!-- 底部弹出层 -->
-<x-login bind:loginsuccess="onLoginSuccess" bind:loginfail="onLoginFail"  showModal="{{showModal}}"></x-login>
+  </view>
+  <!-- 底部弹出层 -->
+  <x-login bind:loginsuccess="onLoginSuccess" bind:loginfail="onLoginFail" showModal="{{showModal}}"></x-login>
 </view>
