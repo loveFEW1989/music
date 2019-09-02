@@ -2,8 +2,8 @@
 
 <i class="iconfont iconsousuo find"></i>
 
-<input type="text" placeholder-class="in-bar" placeholder="{{placeholder}}" class="bar" />
+<input type="text" placeholder-class="in-bar" bindinput="onInput" placeholder="{{placeholder}}" class="bar" />
 
-<button class="search">搜索</button>
+<button class="search" bind:tap="onSearch">搜索</button>
 
 </view>

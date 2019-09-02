@@ -120,7 +120,8 @@ userInfo = options
     }
       
     wx.showLoading({
-      title: '发布中...'
+      title: '发布中...',
+      mask: true
     })
     let promiseArr = []
 
@@ -164,8 +165,13 @@ Promise.all(promiseArr).then((res) => {
     wx.showToast({
       title: '发布成功'
     })
-    wx.navigateBack(
-    )
+    wx.navigateBack()
+    // 获取当前页面栈
+    const pages =  getCurrentPages();
+    // 取得上一个页面
+    const prevPage =pages[pages.length-2]
+    prevPage.onPullDownRefresh()
+    
   })
 }).catch((error) => {
    wx.hideLoading()

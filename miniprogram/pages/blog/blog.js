@@ -1,4 +1,5 @@
 // miniprogram/pages/blog/blog.js
+let keyword = ''
 Page({
 
   /**
@@ -9,6 +10,20 @@ Page({
    blogList: [], // 博客列表
   },
 
+  // 查询事件
+  onSearch(event) {
+    this.setData({
+      blogList: []
+    })
+    keyword = event.detail.keyword
+    this._loadBlogList()
+  },
+  // 跳转到评价页面
+  goToComment(event) {
+   wx.navigateTo({
+     url: `/pages/blog-comment/blog-comment?id=${event.target.dataset.blogid}`
+   })
+  },
   // 发布功能
   onPublish() {
     
@@ -53,18 +68,24 @@ Page({
     this._loadBlogList()
   },
 
-   _loadBlogList() {
+   _loadBlogList(start=0) {
+     wx.showLoading({
+       title:"拼命加载中..."
+     })
     wx.cloud.callFunction({
       name: 'blog',
       data: {
         $url: 'list',
-        start:0,
-        count:10
+        keyword,
+        start,
+        count:3
       }
     }).then((res) => {
        this.setData({
          blogList: this.data.blogList.concat(res.result)
        })
+       wx.hideLoading()
+       wx.stopPullDownRefresh()
        console.log(res.result)
     })
    },
@@ -100,14 +121,17 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    this.setData({
+      blogList: []
+    })
+this._loadBlogList()
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-
+this._loadBlogList(this.data.blogList.length)
   },
 
   /**

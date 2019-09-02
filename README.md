@@ -786,6 +786,52 @@ text-area 获取焦点 键盘弹出 下方要弹到上面去 反之则出现在�
 
 - 通过索引确定当前正在预览的是哪张图片
 
+## 博客卡片组件
+
+- 转换时间
+- 触底重新加载数据， start默认是0 之后 每次都是 数组的长度
+- 下拉刷新  允许下拉刷新 json中设置： "enablePullDownRefresh": true
+- bind:tap 事件会冒泡  catch:tap事件不会冒泡
+- 子组件调用父组件中的方法：
+- let pages = getCurrentPages()
+  let prevpage = pages[pages.length-2] // 取得上一个页面
+  prevpage.onPullDownRefresh()//调用上一个页面中的方法 
+
+## 实现搜索功能（模糊查询）
+- input框 bind:input事件 获取到搜索框中的value
+- 搜索按钮 onSearch事件，为了复用性 ，查询数据库不在该事件中执行， 只抛出自定义事件search,并把value作为参数一并传出去，在调用者中去执行查询事件
+- 调用者通过event.detail.keyword获取到value,最后把value赋值给变量keyword,再把keyword当做关键词去云数据库中查询、查询前会先清空blog列表
+- 改造查询函数_loadBlogList()， 在data中添加keyword 
+- 改造blog.js(云函数)   
+```
+....
+const blogCollection = db.collection('blog')
+
+exports.main = async (event, context) => {
+  const app = new TcbRouter({event})
+  app.router('list', async (ctx, next) => {
+    const keyword = event.keyword
+    let w = {}
+    if(keyword.trim() !=='') {
+      w = {
+        content: new db.RegExp({
+          regexp: keyword,
+          options: 'i'
+        })
+      }
+    }
+    let blogList = await blogCollection.where(w).skip(event.start).limit(event.count).orderBy('createTime', 'desc').get().then((res)=> {
+      return res.data
+    })
+    ctx.body = blogList
+  })
+   ......
+
+return app.serve()
+
+}
+
+```
 ## 图片上传到 云数据库
 
 

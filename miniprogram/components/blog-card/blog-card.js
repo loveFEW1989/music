@@ -10,7 +10,10 @@ Component({
   observers: {
     ['blog.createTime'](val) {
       if(val) {
-        this.data._createTime = formatTime(new Date(val))
+        this.setData({
+          _createTime : formatTime(new Date(val))
+        })
+        
       }
     }
   },
@@ -25,6 +28,13 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    
+    onPreviewImage(event) {
+      const ds = event.target.dataset
+      wx.previewImage({
+        current:ds.imgsrc , 
+        urls: ds.imgs,
+        
+      })
+    }
   }
 })
